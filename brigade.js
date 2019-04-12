@@ -1,5 +1,6 @@
 const { events, Job } = require("brigadier");
-events.on("test-event-type", (event, project) => {
+console.log('HEREEEEEEE')
+events.on("simpleevent", (event, project) => {
     console.log(event)
     console.log(project)
     // var job = new Job("blah-test", "regbatchapps.azurecr.io/batchapps/kubernetes");

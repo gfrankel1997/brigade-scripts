@@ -6,15 +6,15 @@ events.on("simpleevent", (event, project) => {
     var mypayload = JSON.parse(event.payload);
     console.log('MY PAYLOAD: ', mypayload)
 
-    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
+    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/kubernetes");
 
     job.tasks = [
         "cat /scripts/start.sh"
     ];
 
-    job.env = {
-        "APP_URL": mypayload.APP_URL
-    };
+    // job.env = {
+    //     "APP_URL": mypayload.APP_URL
+    // };
 
     // job.env = {
     //     "DOWNLOAD_FILE": "False",

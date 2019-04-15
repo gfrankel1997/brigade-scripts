@@ -13,9 +13,9 @@ events.on("simpleevent", (event, project) => {
         "cat /scripts/start.sh"
     ];
 
-    // job.env = {
-    //     "APP_URL": mypayload.APP_URL
-    // };
+    job.env = {
+        "APP_URL": mypayload.APP_URL
+    };
 
     // job.env = {
     //     "DOWNLOAD_FILE": "False",

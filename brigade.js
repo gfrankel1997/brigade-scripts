@@ -16,8 +16,8 @@ events.on("simpleevent", (event, project) => {
     job.env = mypayload;
 
     job.run().then((res) => {
-        console.log(res);
+        console.log('SUCCESS: ', res);
     }).catch((err) => {
-        console.log(err);
+        console.log('ERROR: ', err);
     });
   });

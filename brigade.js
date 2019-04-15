@@ -7,6 +7,7 @@ events.on("simpleevent", (event, project) => {
     console.log('MY PAYLOAD: ', mypayload)
 
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
+    job.imagePullSecrets = ["myregistrykey"];
 
     job.tasks = [
         "cat /scripts/start.sh"

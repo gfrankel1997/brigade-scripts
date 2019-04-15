@@ -6,7 +6,7 @@ events.on("simpleevent", (event, project) => {
     var mypayload = JSON.parse(event.payload);
     console.log('MY PAYLOAD: ', mypayload)
 
-    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/kubernetes");
+    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
 
     job.tasks = [
         "cat /scripts/start.sh"

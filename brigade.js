@@ -3,6 +3,8 @@ events.on("simpleevent", (event, project) => {
 
     console.log("EVENT: ", event);
     console.log('PAYLOAD: ', event.payload)
+    var mypayload = JSON.parse(event.payload);
+    console.log('MY PAYLOAD: ', mypayload)
 
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
 
@@ -11,7 +13,7 @@ events.on("simpleevent", (event, project) => {
     ];
 
     job.env = {
-        "APP_URL": event.payload.APP_URL
+        "APP_URL": mypayload.APP_URL
     };
 
     // job.env = {

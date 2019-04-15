@@ -13,18 +13,7 @@ events.on("simpleevent", (event, project) => {
     //     "cat /scripts/start.sh"
     // ];
 
-    job.env = {
-        "APP_URL": mypayload.APP_URL
-    };
-
-    // job.env = {
-    //     "DOWNLOAD_FILE": "False",
-    //     "APP_PATH": "/apps/PostCAM",
-    //     "BATCH_COMMAND": "Beyond.Compensation.AutoReview.Console.dll",
-    //     "ASPNETCORE_ENVIRONMENT": "development",
-    //     "APP_COMMAND": "dotnet",
-    //     "LOG_FILE_NAME": "blah2.txt"
-    // };
+    job.env = mypayload;
 
     job.run().then((res) => {
         console.log(res);

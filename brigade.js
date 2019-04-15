@@ -9,9 +9,9 @@ events.on("simpleevent", (event, project) => {
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic2");
     job.imagePullSecrets = ["myregistrykey"];
 
-    job.tasks = [
-        "cat /scripts/start.sh"
-    ];
+    // job.tasks = [
+    //     "cat /scripts/start.sh"
+    // ];
 
     job.env = {
         "APP_URL": mypayload.APP_URL

@@ -6,7 +6,7 @@ events.on("simpleevent", (event, project) => {
     var mypayload = JSON.parse(event.payload);
     console.log('MY PAYLOAD: ', mypayload)
 
-    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic2");
+    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic3");
     job.imagePullSecrets = ["myregistrykey"];
 
     // job.tasks = [

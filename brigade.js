@@ -13,10 +13,11 @@ events.on("exec", (event, project) => {
     console.log('PAYLOAD: ', event.payload)
     var mypayload = JSON.parse(event.payload);
     console.log('MY PAYLOAD: ', mypayload);
-
+    
     console.log('SETTINGS: ', settings);
-
+    
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic6");
+    job.imageForcePull = true;
     job.imagePullSecrets = ["myregistrykey"];
 
     // job.tasks = [

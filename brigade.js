@@ -7,7 +7,7 @@ var client = appInsights.defaultClient;
 console.log('HERE')
 client.trackTrace({message: "Brigade invoked"});
 
-events.on("exec", (event, project) => {
+events.on("simpleevent", (event, project) => {
     client.trackTrace({message: "Brigade event " + event + "received with payload: " + event.payload});
     console.log("EVENT: ", event);
     console.log('PAYLOAD: ', event.payload)

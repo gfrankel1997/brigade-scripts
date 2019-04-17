@@ -1,8 +1,8 @@
 const { events, Job } = require("brigadier");
 const appInsights = require('applicationinsights');
-const settings = require('./appsettings.json');
+// const settings = require('./appsettings.json');
 
-appInsights.setup(settings.APPINSIGHTS_INSTRUMENTATIONKEY).start();
+appInsights.setup("6365323e-679e-4d81-8813-b8dea89aff14").start();
 var client = appInsights.defaultClient;
 console.log('HERE')
 client.trackTrace({message: "Brigade invoked"});

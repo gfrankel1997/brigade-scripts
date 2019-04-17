@@ -14,7 +14,7 @@ events.on("simpleevent", (event, project) => {
     var mypayload = JSON.parse(event.payload);
     console.log('MY PAYLOAD: ', mypayload);
     
-    console.log('SETTINGS: ', settings);
+    // console.log('SETTINGS: ', settings);
     
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
     job.imageForcePull = true;

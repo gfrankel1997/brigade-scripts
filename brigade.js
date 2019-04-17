@@ -16,7 +16,7 @@ events.on("exec", (event, project) => {
     
     console.log('SETTINGS: ', settings);
     
-    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic6");
+    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
     job.imageForcePull = true;
     job.imagePullSecrets = ["myregistrykey"];
 

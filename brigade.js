@@ -30,7 +30,7 @@ events.on("simpleevent", (event, project) => {
         console.log('SUCCESS: ', res);
         client.trackTrace({message: "Brigade event " + event + "succeeded"});
     }).catch((err) => {
-        client.traceException({exception: new Error("Brigade event " + event + "failed with error(s) " + err.toString())})
+        client.trackException({exception: new Error("Brigade event " + event + "failed with error(s) " + err.toString())})
         console.log('ERROR: ', err);
     });
 });

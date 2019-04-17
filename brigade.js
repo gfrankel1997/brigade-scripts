@@ -8,7 +8,7 @@ console.log('HERE')
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("simpleevent", (event, project) => {
-    client.trackTrace({message: "Brigade event " + event + "received with payload: " + event.payload});
+    client.trackTrace({message: "Brigade event " + event.type + "received with payload: " + event.payload});
     console.log("EVENT: ", event);
     console.log('PAYLOAD: ', event.payload)
     var mypayload = JSON.parse(event.payload);
@@ -28,9 +28,9 @@ events.on("simpleevent", (event, project) => {
 
     job.run().then((res) => {
         console.log('SUCCESS: ', res);
-        client.trackTrace({message: "Brigade event " + event + "succeeded"});
+        client.trackTrace({message: "Brigade event " + event.type + "succeeded"});
     }).catch((err) => {
-        client.trackException({exception: new Error("Brigade event " + event + "failed with error(s) " + err.toString())})
+        client.trackException({exception: new Error("Brigade event " + event.type + "failed with error(s) " + err.toString())})
         console.log('ERROR: ', err);
     });
 });

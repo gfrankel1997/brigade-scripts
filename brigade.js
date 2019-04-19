@@ -8,6 +8,8 @@ var client = appInsights.defaultClient;
 
 client.trackTrace({message: "Brigade invoked"});
 
+console.log("HERE");
+
 events.on("batchfilereceived", (event, project) => {
     client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
 
@@ -25,7 +27,7 @@ events.on("batchfilereceived", (event, project) => {
         job.imageForcePull = true;
         job.imagePullSecrets = ["batchappsregistry"];
 
-    job.env = brigade_payload;
+    job.env = brigade_payload.env_vars || {};
 
     job.run().then((res) => {
         console.log("Brigade event " + event.type + " succeeded");

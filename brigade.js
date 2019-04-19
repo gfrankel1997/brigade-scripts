@@ -8,7 +8,7 @@ var client = appInsights.defaultClient;
 
 client.trackTrace({message: "Brigade invoked"});
 
-events.on("simpleevent", (event, project) => {
+events.on("batchfilereceived", (event, project) => {
     client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
 
     var brigade_payload = JSON.parse(event.payload);

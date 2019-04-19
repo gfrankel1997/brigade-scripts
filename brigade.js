@@ -1,36 +1,47 @@
 const { events, Job } = require("brigadier");
 const appInsights = require('applicationinsights');
-// const settings = require('./appsettings.json');
+const settings = require('./appsettings.json');
 
-appInsights.setup("6365323e-679e-4d81-8813-b8dea89aff14").start();
+appInsights.setup(settings.APPINSIGHTS_INSTRUMENTATIONKEY).start();
 var client = appInsights.defaultClient;
-console.log('HERE')
+
+
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("simpleevent", (event, project) => {
-    client.trackTrace({message: "Brigade event " + event.type + "received with payload: " + event.payload});
-    console.log("EVENT: ", event);
-    console.log('PAYLOAD: ', event.payload)
-    var mypayload = JSON.parse(event.payload);
-    console.log('MY PAYLOAD: ', mypayload);
-    
-    // console.log('SETTINGS: ', settings);
-    
-    var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
-    job.imageForcePull = true;
-    job.imagePullSecrets = ["batchappsregistry"];
+    client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
 
-    // job.tasks = [
-    //     "cat /scripts/start.sh"
-    // ];
+    var brigade_payload = JSON.parse(event.payload);
 
-    job.env = mypayload;
+    if(!validate_payload(brigade_payload)) {
+        return;
+    }
+
+    var job_name = brigade_payload.job_name;
+    var image_name = brigade_payload.image_name;
+
+    var job = new Job(job_name, settings.registry + "/" + image_name);
+        job.imageForcePull = true;
+        job.imagePullSecrets = ["batchappsregistry"];
+
+    job.env = brigade_payload;
 
     job.run().then((res) => {
-        console.log('SUCCESS: ', res);
         client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
     }).catch((err) => {
-        client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())})
-        console.log('ERROR: ', err);
+        client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())});
     });
 });
+
+function validate_payload(payload) {
+    if(!("job_name" in payload)) {
+        client.trackException("No job name provided. Cancelling operation.");
+        return false;
+    }
+    if(!("image_name" in payload)) {
+        client.trackException("No image name provided. Cancelling operation.");
+        return false;
+    }
+
+    return true;
+}

@@ -34,7 +34,7 @@ events.on("batchfilereceived", (event, project) => {
         console.log("Brigade event " + event.type + " succeeded");
         client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
     }).catch((err) => {
-        console.log(3)
+        console.log("Brigade event " + event.type + " failed with error(s): " + err.toString())
         console.error("Brigade event " + event.type + " failed with error(s): " + err.toString());
         client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())});
     });

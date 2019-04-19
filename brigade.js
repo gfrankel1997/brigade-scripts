@@ -24,6 +24,10 @@ events.on("batchfilereceived", (event, project) => {
         job.imageForcePull = true;
         job.imagePullSecrets = ["batchappsregistry"];
         job.streamLogs = true;
+        job.resourceRequests.memory = "8Gi";
+        job.resourceRequests.cpu = "2";
+        job.resourceLimits.memory = "8Gi";
+        job.resourceLimits.cpu = "2";
 
     job.env = brigade_payload.env_vars || {};
 

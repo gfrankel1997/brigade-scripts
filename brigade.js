@@ -18,7 +18,7 @@ events.on("simpleevent", (event, project) => {
     
     var job = new Job("gateway-test", "regbatchapps.azurecr.io/batchapps/generic");
     job.imageForcePull = true;
-    job.imagePullSecrets = ["myregistrykey"];
+    job.imagePullSecrets = ["batchappsregistry"];
 
     // job.tasks = [
     //     "cat /scripts/start.sh"
@@ -28,9 +28,9 @@ events.on("simpleevent", (event, project) => {
 
     job.run().then((res) => {
         console.log('SUCCESS: ', res);
-        client.trackTrace({message: "Brigade event " + event.type + "succeeded"});
+        client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
     }).catch((err) => {
-        client.trackException({exception: new Error("Brigade event " + event.type + "failed with error(s) " + err.toString())})
+        client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())})
         console.log('ERROR: ', err);
     });
 });

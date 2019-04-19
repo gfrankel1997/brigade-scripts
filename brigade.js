@@ -27,8 +27,10 @@ events.on("batchfilereceived", (event, project) => {
     job.env = brigade_payload;
 
     job.run().then((res) => {
+        console.log("Brigade event " + event.type + " succeeded");
         client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
     }).catch((err) => {
+        console.error("Brigade event " + event.type + " failed with error(s): " + err.toString());
         client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())});
     });
 });

@@ -12,7 +12,7 @@ console.log("HERE");
 
 events.on("batchfilereceived", (event, project) => {
     client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
-
+    console.log(1)
     var brigade_payload = JSON.parse(event.payload);
 
     if(!validate_payload(brigade_payload)) {
@@ -30,9 +30,11 @@ events.on("batchfilereceived", (event, project) => {
     job.env = brigade_payload.env_vars || {};
 
     job.run().then((res) => {
+        console.log(2)
         console.log("Brigade event " + event.type + " succeeded");
         client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
     }).catch((err) => {
+        console.log(3)
         console.error("Brigade event " + event.type + " failed with error(s): " + err.toString());
         client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())});
     });

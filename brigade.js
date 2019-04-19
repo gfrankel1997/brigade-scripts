@@ -23,6 +23,7 @@ events.on("batchfilereceived", (event, project) => {
     var job = new Job(job_name, settings.registry + "/" + image_name);
         job.imageForcePull = true;
         job.imagePullSecrets = ["batchappsregistry"];
+        job.streamLogs = true;
 
     job.env = brigade_payload.env_vars || {};
 

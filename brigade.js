@@ -1,6 +1,6 @@
 const { events, Job } = require("brigadier");
 const appInsights = require('applicationinsights');
-const settings = require('./appsettings.json');
+const settings = require('/home/src/dist/appsettings.json');
 
 appInsights.setup(settings.APPINSIGHTS_INSTRUMENTATIONKEY).start();
 var client = appInsights.defaultClient;

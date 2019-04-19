@@ -14,6 +14,7 @@ events.on("batchfilereceived", (event, project) => {
     var brigade_payload = JSON.parse(event.payload);
 
     if(!validate_payload(brigade_payload)) {
+        client.trackException({exception: new Error("Could not validate payload: " + brigade_payload.toString())});
         return;
     }
 

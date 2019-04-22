@@ -9,6 +9,7 @@ var client = appInsights.defaultClient;
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
+    console.log("EVENT REVISION: ", event.revision)
     client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
     var brigade_payload = JSON.parse(event.payload);
 
@@ -24,9 +25,9 @@ events.on("batchfilereceived", (event, project) => {
         job.imageForcePull = true;
         job.imagePullSecrets = ["batchappsregistry"];
         job.streamLogs = true;
-        job.resourceRequests.memory = "8Gi";
+        job.resourceRequests.memory = "6Gi";
         job.resourceRequests.cpu = "2";
-        job.resourceLimits.memory = "8Gi";
+        job.resourceLimits.memory = "6Gi";
         job.resourceLimits.cpu = "2";
 
     job.env = brigade_payload.env_vars || {};
@@ -42,12 +43,15 @@ events.on("batchfilereceived", (event, project) => {
 
 function validate_payload(payload) {
     if(!("job_name" in payload)) {
-        client.trackException("No job name provided. Cancelling operation.");
+        client.trackException("No job_name provided in payload. Cancelling operation.");
         return false;
     }
     if(!("image_name" in payload)) {
-        client.trackException("No image name provided. Cancelling operation.");
+        client.trackException("No image_name provided in payload. Cancelling operation.");
         return false;
+    }
+    if(!("SETTINGS_URL" in payload.env_vars)) {
+        client.trackException("No SETTNGS_URL provided in payload.env_vars. Cancelling operation.");
     }
 
     return true;

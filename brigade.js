@@ -52,6 +52,7 @@ function validate_payload(payload) {
     }
     if(!("SETTINGS_URL" in payload.env_vars)) {
         client.trackException("No SETTNGS_URL provided in payload.env_vars. Cancelling operation.");
+        return false;
     }
 
     return true;

@@ -10,7 +10,9 @@ client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
     console.log("EVENT REVISION: ", event.revision)
+    console.log("dev");
     client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
+
     var brigade_payload = JSON.parse(event.payload);
 
     if(!validate_payload(brigade_payload)) {

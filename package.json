@@ -1,0 +1,25 @@
+{
+  "name": "brigade-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "brigade.js",
+  "dependencies": {
+    "@azure/brigadier": "^0.4.0",
+    "applicationinsights": "^1.3.1",
+    "brigadier": "^0.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gfrankel1997/brigade-scripts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gfrankel1997/brigade-scripts/issues"
+  },
+  "homepage": "https://github.com/gfrankel1997/brigade-scripts#readme"
+}

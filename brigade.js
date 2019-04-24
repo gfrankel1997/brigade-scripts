@@ -9,9 +9,7 @@ var client = appInsights.defaultClient;
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
-    console.log("EVENT REVISION: ", event.revision)
-    console.log("dev");
-    client.trackTrace({message: "Brigade event " + event.type + " received with payload: " + event.payload});
+    client.trackTrace({message: "Brigade event " + event.type + "on branch: " + event.revision.ref + " received with payload: " + event.payload});
 
     var brigade_payload = JSON.parse(event.payload);
 
@@ -52,10 +50,24 @@ function validate_payload(payload) {
         client.trackException("No image_name provided in payload. Cancelling operation.");
         return false;
     }
+    if(!("branch" in payload)) {
+        client.trackException("No branch provided in payload. Cancelling operation.");
+        return false;
+    }
     if(!("SETTINGS_URL" in payload.env_vars)) {
         client.trackException("No SETTNGS_URL provided in payload.env_vars. Cancelling operation.");
+        return false;
+    }
+    if(!("FILE_URL" in payload.env_vars)) {
+        client.trackException("No FILE_URL provided in payload.env_vars. Cancelling operation.");
+        return false;
+    }
+    if(!("FILE_NAME" in payload.env_vars)) {
+        client.trackException("No FILE_NAME provided in payload.env_vars. Cancelling operation.");
         return false;
     }
 
     return true;
 }
+
+

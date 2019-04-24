@@ -9,7 +9,7 @@ var client = appInsights.defaultClient;
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
-    client.trackTrace({message: "Brigade event " + event.type + "on branch: " + event.revision.ref + " received with payload: " + event.payload});
+    client.trackTrace({message: "Brigade event " + event.type + " on branch: " + event.revision.ref + " received with payload: " + event.payload});
 
     var brigade_payload = JSON.parse(event.payload);
 
@@ -18,23 +18,21 @@ events.on("batchfilereceived", (event, project) => {
         return;
     }
 
-    var job_name = brigade_payload.job_name;
-    var image_name = brigade_payload.image_name;
+    var batch_job = create_job(brigade_payload.job_name, settings.registry + "/" + brigade_payload.image_name, payload.env_vars);
 
-    var job = new Job(job_name, settings.registry + "/" + image_name);
-        job.imageForcePull = true;
-        job.imagePullSecrets = ["batchappsregistry"];
-        job.streamLogs = true;
-        job.resourceRequests.memory = "4Gi";
-        job.resourceRequests.cpu = "1.5";
-        job.resourceLimits.memory = "4Gi";
-        job.resourceLimits.cpu = "1.5";
-
-    job.env = brigade_payload.env_vars || {};
-
-    job.run().then((res) => {
+    batch_job.run().then((res) => {
         console.log("Brigade event " + event.type + " succeeded");
         client.trackTrace({message: "Brigade event " + event.type + " succeeded"});
+        if(payload.env_vars.FILE_NAME.includes("DDF") && payload.env_vars.FILE_NAME.includes("MIDNGHT")) {
+            client.trackTrace({message: "DDF MIDNGHT file processed, starting PostCAM"});
+            var postcam_timestamp = Math.floor((new Date()).getTime() / 1000);
+            var postcam_job = create_job("postcam-" + postcam_timestamp, settings.registry + "/" + "batchapps/postcam-" + payload.branch);
+            postcam_job.run().then((res) => {
+                client.trackTrace({message: "Brigade event PostCAM-" + postcam_timestamp + " succeeded"});
+            }).catch((err) => {
+                console.error("Brigade event PostCAM failed with error(s): " + err.toString());
+            });
+        }
     }).catch((err) => {
         console.error("Brigade event " + event.type + " failed with error(s): " + err.toString());
         client.trackException({exception: new Error("Brigade event " + event.type + " failed with error(s): " + err.toString())});
@@ -70,4 +68,17 @@ function validate_payload(payload) {
     return true;
 }
 
+function create_job(job_name, image_name, env_vars) {
+    var job = new Job(job_name, image_name);
+        job.imageForcePull = true;
+        job.imagePullSecrets = ["batchappsregistry"];
+        job.streamLogs = true;
+        job.resourceRequests.memory = "4Gi";
+        job.resourceRequests.cpu = "1.5";
+        job.resourceLimits.memory = "4Gi";
+        job.resourceLimits.cpu = "1.5";
+        job.env = env_vars || {};
+
+    return job;
+}
 

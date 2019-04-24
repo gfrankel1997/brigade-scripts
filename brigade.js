@@ -18,7 +18,7 @@ events.on("batchfilereceived", (event, project) => {
         return;
     }
 
-    var batch_job = create_job(brigade_payload.job_name, settings.registry + "/" + brigade_payload.image_name, payload.env_vars);
+    var batch_job = create_job(brigade_payload.job_name, settings.registry + "/" + brigade_payload.image_name, brigade_payload.env_vars);
 
     batch_job.run().then((res) => {
         console.log("Brigade event " + event.type + " succeeded");
@@ -26,7 +26,7 @@ events.on("batchfilereceived", (event, project) => {
         if(brigade_payload.env_vars.FILE_NAME.includes("DDF") && brigade_payload.env_vars.FILE_NAME.includes("MIDNGHT")) {
             client.trackTrace({message: "DDF MIDNGHT file processed, starting PostCAM"});
             var postcam_timestamp = Math.floor((new Date()).getTime() / 1000);
-            var postcam_job = create_job("postcam-" + postcam_timestamp, settings.registry + "/" + "batchapps/postcam-" + payload.branch);
+            var postcam_job = create_job("postcam-" + postcam_timestamp, settings.registry + "/" + "batchapps/postcam-" + brigade_payload.branch);
 
             postcam_job.run().then((res) => {
                 client.trackTrace({message: "Brigade event PostCAM-" + postcam_timestamp + " succeeded"});

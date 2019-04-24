@@ -27,7 +27,8 @@ events.on("batchfilereceived", (event, project) => {
             client.trackTrace({message: "DDF MIDNGHT file processed, starting PostCAM"});
             var postcam_timestamp = Math.floor((new Date()).getTime() / 1000);
             var postcam_env_vars = {
-                "SETTINGS_URL": brigade_payload.env_vars.POSTCAM_SETTINGS_URL
+                "SETTINGS_URL": brigade_payload.env_vars.POSTCAM_SETTINGS_URL,
+                "ASPNETCORE_ENVIRONMENT": brigade_payload.env_vars.ASPNETCORE_ENVIRONMENT
             }
             var postcam_job = create_job("postcam-" + postcam_timestamp, settings.registry + "/batchapps/postcam", postcam_env_vars);
 
@@ -50,10 +51,6 @@ function validate_payload(payload) {
     }
     if(!("image_name" in payload)) {
         client.trackException("No image_name provided in payload. Cancelling operation.");
-        return false;
-    }
-    if(!("branch" in payload)) {
-        client.trackException("No branch provided in payload. Cancelling operation.");
         return false;
     }
     if(!("SETTINGS_URL" in payload.env_vars)) {

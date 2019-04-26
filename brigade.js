@@ -9,6 +9,7 @@ var client = appInsights.defaultClient;
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
+    console.log("I AM IN EVENT")
     client.trackTrace({message: "Brigade event " + event.type + " on branch: " + event.revision.ref + " received with payload: " + event.payload});
 
     var brigade_payload = JSON.parse(event.payload);
@@ -19,7 +20,7 @@ events.on("batchfilereceived", (event, project) => {
     }
 
     var batch_job = create_job(brigade_payload.job_name,
-                                settings.registry + "/" + brigade_payload.image_name + ":" + brigade_payload.image_tag,
+                                settings.registry + "/" + brigade_payload.image_name,
                                 brigade_payload.env_vars);
 
     batch_job.run().then((res) => {
@@ -33,7 +34,7 @@ events.on("batchfilereceived", (event, project) => {
                 "ASPNETCORE_ENVIRONMENT": brigade_payload.env_vars.ASPNETCORE_ENVIRONMENT
             }
             var postcam_job = create_job("postcam-" + postcam_timestamp,
-                                        settings.registry + "/batchapps/postcam" + ":" + brigade_payload.postcam_version,
+                                        settings.registry + "/" + brigade_payload.postcam_image_name,
                                         postcam_env_vars);
 
             postcam_job.run().then((res) => {
@@ -57,10 +58,6 @@ function validate_payload(payload) {
         client.trackException("No image_name provided in payload. Cancelling operation.");
         return false;
     }
-    if(!("image_tag" in payload)) {
-        client.trackException("No image_tag provided in payload. Cancelling operation.");
-        return false;
-    }
     if(!("SETTINGS_URL" in payload.env_vars)) {
         client.trackException("No SETTNGS_URL provided in payload.env_vars. Cancelling operation.");
         return false;
@@ -73,8 +70,8 @@ function validate_payload(payload) {
         client.trackException("No FILE_NAME provided in payload.env_vars. Cancelling operation.");
         return false;
     }
-    if(!("postcam_version" in payload) && is_midnight_ddf(payload.env_vars.FILE_NAME)) {
-        client.trackException("No postcam_version provided in payload for midnight ddf file. Cancelling operation.");
+    if(!("postcam_image_name" in payload) && is_midnight_ddf(payload.env_vars.FILE_NAME)) {
+        client.trackException("No postcam_image_name provided in payload for midnight ddf file. Cancelling operation.");
         return false;
     }
 
@@ -101,3 +98,4 @@ function is_midnight_ddf(filename) {
     }
     return false;
 }
+

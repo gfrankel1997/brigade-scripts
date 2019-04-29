@@ -9,7 +9,7 @@ var client = appInsights.defaultClient;
 client.trackTrace({message: "Brigade invoked"});
 
 events.on("batchfilereceived", (event, project) => {
-    console.log("I AM IN EVENT")
+    console.log("batchfilereceived event")
     client.trackTrace({message: "Brigade event " + event.type + " on branch: " + event.revision.ref + " received with payload: " + event.payload});
 
     var brigade_payload = JSON.parse(event.payload);
@@ -82,7 +82,7 @@ function create_job(job_name, image_name, env_vars) {
     var job = new Job(job_name, image_name);
         job.imageForcePull = true;
         job.imagePullSecrets = ["batchappsregistry"];
-        job.streamLogs = true;
+        //job.streamLogs = true;
         job.resourceRequests.memory = "4Gi";
         job.resourceRequests.cpu = "1.5";
         job.resourceLimits.memory = "4Gi";
@@ -98,4 +98,3 @@ function is_midnight_ddf(filename) {
     }
     return false;
 }
-
